@@ -23,7 +23,7 @@ public class FormDataService
 
     public void AddSubmission(FormSubmission submission)
     {
-        submission.SubmittedAt = DateTime.Now;
+        submission.SubmittedAt = DateTime.UtcNow;
         _submissions.Add(submission);
     }
 

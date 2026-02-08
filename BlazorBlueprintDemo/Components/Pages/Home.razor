@@ -1,0 +1,258 @@
+﻿@page "/"
+@using BlazorBlueprintDemo.Services
+@inject FormDataService FormDataService
+@rendermode InteractiveServer
+
+<PageTitle>Blazor Blueprint Showcase</PageTitle>
+
+<div class="container mx-auto p-4">
+    <Card>
+        <CardHeader>
+            <CardTitle>Blazor Blueprint Component Showcase</CardTitle>
+            <CardDescription>
+                A comprehensive form demonstrating various Blazor Blueprint UI components
+            </CardDescription>
+        </CardHeader>
+        <CardContent>
+            @if (!_isSubmitted)
+            {
+                <EditForm Model="@_formData" OnValidSubmit="HandleSubmit">
+                    <DataAnnotationsValidator />
+                    
+                    <div class="space-y-6">
+                        <!-- Personal Information Section -->
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold">Personal Information</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <Label For="firstName">First Name</Label>
+                                    <Input Id="firstName" Value="@_formData.FirstName" ValueChanged="@((string value) => _formData.FirstName = value)" Placeholder="Enter your first name" />
+                                    <ValidationMessage For="@(() => _formData.FirstName)" />
+                                </div>
+                                
+                                <div class="space-y-2">
+                                    <Label For="lastName">Last Name</Label>
+                                    <Input Id="lastName" Value="@_formData.LastName" ValueChanged="@((string value) => _formData.LastName = value)" Placeholder="Enter your last name" />
+                                    <ValidationMessage For="@(() => _formData.LastName)" />
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <Label For="email">Email</Label>
+                                <Input Id="email" Type="email" Value="@_formData.Email" ValueChanged="@((string value) => _formData.Email = value)" Placeholder="your.email@example.com" />
+                                <ValidationMessage For="@(() => _formData.Email)" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <Label For="phone">Phone Number</Label>
+                                <Input Id="phone" Value="@_formData.Phone" ValueChanged="@((string value) => _formData.Phone = value)" Placeholder="+1 (555) 123-4567" />
+                            </div>
+                        </div>
+
+                        <!-- Preferences Section -->
+                        <Separator />
+                        
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold">Preferences</h3>
+                            
+                            <div class="space-y-2">
+                                <Label For="country">Country</Label>
+                                <Select Value="@_formData.Country" ValueChanged="@((string value) => _formData.Country = value)">
+                                    <SelectTrigger Id="country">
+                                        <SelectValue Placeholder="Select your country" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem Value="usa">United States</SelectItem>
+                                        <SelectItem Value="canada">Canada</SelectItem>
+                                        <SelectItem Value="uk">United Kingdom</SelectItem>
+                                        <SelectItem Value="germany">Germany</SelectItem>
+                                        <SelectItem Value="france">France</SelectItem>
+                                        <SelectItem Value="japan">Japan</SelectItem>
+                                        <SelectItem Value="australia">Australia</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div class="space-y-2">
+                                <Label For="bio">Bio</Label>
+                                <Textarea Id="bio" Value="@_formData.Bio" ValueChanged="@((string value) => _formData.Bio = value)" Placeholder="Tell us about yourself..." Rows="4" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <Label>Experience Level</Label>
+                                <RadioGroup Value="@_formData.ExperienceLevel" ValueChanged="@((string value) => _formData.ExperienceLevel = value)">
+                                    <div class="flex items-center space-x-2">
+                                        <RadioGroupItem Value="beginner" Id="beginner" />
+                                        <Label For="beginner">Beginner</Label>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <RadioGroupItem Value="intermediate" Id="intermediate" />
+                                        <Label For="intermediate">Intermediate</Label>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <RadioGroupItem Value="advanced" Id="advanced" />
+                                        <Label For="advanced">Advanced</Label>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <RadioGroupItem Value="expert" Id="expert" />
+                                        <Label For="expert">Expert</Label>
+                                    </div>
+                                </RadioGroup>
+                            </div>
+
+                            <div class="space-y-2">
+                                <Label>Favorite Color</Label>
+                                <RadioGroup Value="@_formData.FavoriteColor" ValueChanged="@((string value) => _formData.FavoriteColor = value)" Orientation="Horizontal">
+                                    <div class="flex items-center space-x-2">
+                                        <RadioGroupItem Value="blue" Id="blue" />
+                                        <Label For="blue">Blue</Label>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <RadioGroupItem Value="red" Id="red" />
+                                        <Label For="red">Red</Label>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <RadioGroupItem Value="green" Id="green" />
+                                        <Label For="green">Green</Label>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <RadioGroupItem Value="purple" Id="purple" />
+                                        <Label For="purple">Purple</Label>
+                                    </div>
+                                </RadioGroup>
+                            </div>
+
+                            <div class="space-y-2">
+                                <Label For="satisfaction">Satisfaction Level: @_formData.Satisfaction</Label>
+                                <Slider Id="satisfaction" Min="0" Max="10" Step="1" Value="@_formData.Satisfaction" ValueChanged="@((int value) => _formData.Satisfaction = value)" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <div class="flex items-center space-x-2">
+                                    <Switch Id="newsletter" Checked="@_formData.ReceiveNewsletter" CheckedChanged="@((bool value) => _formData.ReceiveNewsletter = value)" />
+                                    <Label For="newsletter">Subscribe to newsletter</Label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Agreement Section -->
+                        <Separator />
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-2">
+                                <Checkbox Id="terms" Checked="@_formData.AcceptTerms" CheckedChanged="@((bool value) => _formData.AcceptTerms = value)" />
+                                <Label For="terms" Class="text-sm font-normal">
+                                    I accept the terms and conditions
+                                </Label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex gap-4">
+                            <Button Type="submit" Disabled="@(!_formData.AcceptTerms)">
+                                Submit Form
+                            </Button>
+                            <Button Type="button" Variant="ButtonVariant.Outline" OnClick="ResetForm">
+                                Reset
+                            </Button>
+                            <Button Type="button" Variant="ButtonVariant.Secondary" OnClick="ShowSubmissions">
+                                View Submissions (@FormDataService.GetSubmissionCount())
+                            </Button>
+                        </div>
+                    </div>
+                </EditForm>
+            }
+            else
+            {
+                <Alert>
+                    <AlertTitle>Success!</AlertTitle>
+                    <AlertDescription>
+                        Your form has been submitted successfully. Total submissions: @FormDataService.GetSubmissionCount()
+                    </AlertDescription>
+                </Alert>
+                
+                <div class="mt-4">
+                    <Button OnClick="@(() => _isSubmitted = false)">Submit Another</Button>
+                </div>
+            }
+        </CardContent>
+    </Card>
+
+    <!-- Dialog for viewing all submissions -->
+    <Dialog Open="@_showSubmissionsDialog" OpenChanged="@((bool value) => _showSubmissionsDialog = value)">
+        <DialogContent Class="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+                <DialogTitle>All Form Submissions</DialogTitle>
+                <DialogDescription>
+                    Total submissions stored in memory: @FormDataService.GetSubmissionCount()
+                </DialogDescription>
+            </DialogHeader>
+            
+            @if (FormDataService.GetSubmissionCount() == 0)
+            {
+                <p class="text-muted-foreground">No submissions yet.</p>
+            }
+            else
+            {
+                <div class="space-y-4">
+                    @foreach (var submission in FormDataService.GetAllSubmissions().OrderByDescending(s => s.SubmittedAt))
+                    {
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>@submission.FirstName @submission.LastName</CardTitle>
+                                <CardDescription>Submitted: @submission.SubmittedAt.ToString("g")</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <div><strong>Email:</strong> @submission.Email</div>
+                                    <div><strong>Phone:</strong> @submission.Phone</div>
+                                    <div><strong>Country:</strong> @submission.Country</div>
+                                    <div><strong>Experience:</strong> @submission.ExperienceLevel</div>
+                                    <div><strong>Favorite Color:</strong> @submission.FavoriteColor</div>
+                                    <div><strong>Satisfaction:</strong> @submission.Satisfaction/10</div>
+                                    <div><strong>Newsletter:</strong> @(submission.ReceiveNewsletter ? "Yes" : "No")</div>
+                                    <div><strong>Terms Accepted:</strong> @(submission.AcceptTerms ? "Yes" : "No")</div>
+                                    @if (!string.IsNullOrEmpty(submission.Bio))
+                                    {
+                                        <div class="col-span-2"><strong>Bio:</strong> @submission.Bio</div>
+                                    }
+                                </div>
+                            </CardContent>
+                        </Card>
+                    }
+                </div>
+            }
+            
+            <DialogFooter>
+                <Button Variant="ButtonVariant.Outline" OnClick="@(() => _showSubmissionsDialog = false)">
+                    Close
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+</div>
+
+@code {
+    private FormSubmission _formData = new();
+    private bool _isSubmitted = false;
+    private bool _showSubmissionsDialog = false;
+
+    private void HandleSubmit()
+    {
+        FormDataService.AddSubmission(_formData);
+        _isSubmitted = true;
+        _formData = new FormSubmission();
+    }
+
+    private void ResetForm()
+    {
+        _formData = new FormSubmission();
+    }
+
+    private void ShowSubmissions()
+    {
+        _showSubmissionsDialog = true;
+    }
+}
+
